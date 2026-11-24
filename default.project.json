@@ -1,5 +1,5 @@
 {
-  "name": "jogo",
+  "name": "nao-acorde-o-caseiro",
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
@@ -24,31 +24,10 @@
       }
     },
     "Workspace": {
-      "$className": "Workspace",
-      "Baseplate": {
-        "$className": "Part",
-        "$properties": {
-          "Anchored": true,
-          "Size": [512, 8, 512],
-          "Position": [0, -4, 0],
-          "Color": [0.388, 0.372, 0.384],
-          "Material": "Grass"
-        }
-      },
-      "SpawnLocation": {
-        "$className": "SpawnLocation",
-        "$properties": {
-          "Anchored": true,
-          "Size": [12, 1, 12],
-          "Position": [0, 0.5, 0]
-        }
-      }
+      "$className": "Workspace"
     },
     "Lighting": {
-      "$className": "Lighting",
-      "$properties": {
-        "ClockTime": 14
-      }
+      "$className": "Lighting"
     }
   }
 }
