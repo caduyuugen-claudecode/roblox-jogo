@@ -27,6 +27,8 @@ jobs:
         env:
           ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
         run: |
+          ROBLOX_API_KEY=$(printf '%s' "$ROBLOX_API_KEY" | tr -d '[:space:]')
+          echo "Tamanho da chave: ${#ROBLOX_API_KEY}"
           UNIVERSE_ID=$(jq -r .universeId roblox.json)
           PLACE_ID=$(jq -r .placeId roblox.json)
           if [ -z "$ROBLOX_API_KEY" ]; then echo "Falta o segredo ROBLOX_API_KEY"; exit 1; fi
