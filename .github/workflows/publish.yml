@@ -1,0 +1,39 @@
+name: Publicar no Roblox
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baixar Rojo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download --repo rojo-rbx/rojo --pattern '*linux-x86_64.zip' --output rojo.zip
+          unzip -o rojo.zip
+          chmod +x rojo
+          ./rojo --version
+
+      - name: Montar o jogo (.rbxl)
+        run: ./rojo build default.project.json --output jogo.rbxl
+
+      - name: Publicar via Open Cloud
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          UNIVERSE_ID=$(jq -r .universeId roblox.json)
+          PLACE_ID=$(jq -r .placeId roblox.json)
+          if [ -z "$ROBLOX_API_KEY" ]; then echo "Falta o segredo ROBLOX_API_KEY"; exit 1; fi
+          if [ "$UNIVERSE_ID" = "PREENCHER" ] || [ "$PLACE_ID" = "PREENCHER" ]; then echo "Falta preencher roblox.json"; exit 1; fi
+          RESPONSE=$(curl -sS --fail-with-body -X POST \
+            "https://apis.roblox.com/universes/v1/${UNIVERSE_ID}/places/${PLACE_ID}/versions?versionType=Published" \
+            -H "x-api-key: ${ROBLOX_API_KEY}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @jogo.rbxl)
+          echo "Publicado: $RESPONSE"
